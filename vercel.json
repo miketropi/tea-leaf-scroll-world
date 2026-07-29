@@ -1,0 +1,12 @@
+{
+  "buildCommand": "vinext build",
+  "installCommand": "npm install",
+  "framework": null,
+  "outputDirectory": "dist/client",
+  "rewrites": [
+    {
+      "source": "/((?!assets/|media/|_next/|favicon\\.svg|file\\.svg|globe\\.svg|window\\.svg|og\\.png).*)",
+      "destination": "/api/server"
+    }
+  ]
+}
