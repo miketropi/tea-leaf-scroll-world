@@ -91,6 +91,20 @@ export function TeaJourney() {
           if (video && !disposed) {
             video.src = url;
             video.load();
+            // Wait until the video has enough data to be seekable before
+            // marking everything as ready. Otherwise the first scroll
+            // triggers currentTime jumps that silently fail on cold buffers.
+            await new Promise<void>((resolve) => {
+              if (video.readyState >= video.HAVE_FUTURE_DATA) {
+                resolve();
+              } else {
+                const done = () => resolve();
+                video.addEventListener("canplay", done, { once: true });
+                video.addEventListener("error", done, { once: true });
+                // Safety timeout so one stuck video doesn't block the UI forever
+                setTimeout(done, 8000);
+              }
+            });
           }
         }),
       )
@@ -138,7 +152,13 @@ export function TeaJourney() {
     let rafId = 0;
     const animate = () => {
       videoRefs.current.forEach((video, index) => {
-        if (!video || !Number.isFinite(video.duration) || video.seeking) return;
+        if (
+          !video ||
+          !Number.isFinite(video.duration) ||
+          video.readyState < video.HAVE_FUTURE_DATA ||
+          video.seeking
+        )
+          return;
         const desired = targets.current[index];
         current.current[index] += (desired - current.current[index]) * 0.16;
         const time = clamp(current.current[index], 0, 0.998) * video.duration;
@@ -190,7 +210,7 @@ export function TeaJourney() {
               className="journey-film"
               muted
               playsInline
-              preload={index < 2 ? "auto" : "metadata"}
+              preload="auto"
               poster={scenes[index].still}
               aria-hidden="true"
             />
