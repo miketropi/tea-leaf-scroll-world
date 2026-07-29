@@ -418,6 +418,158 @@ a {
   }
 }
 
+/* ---- Follow link in header ---- */
+
+.journey-follow {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.22s ease;
+}
+
+.journey-follow:hover {
+  color: #e9e2d3;
+}
+
+/* ---- Modal ---- */
+
+.social-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 17, 12, 0.74);
+  backdrop-filter: blur(12px);
+  animation: overlay-in 0.35s ease;
+}
+
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.social-modal {
+  position: relative;
+  width: min(380px, 90vw);
+  padding: 38px 28px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  background: linear-gradient(145deg, #1e2a1f, #172017);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  animation: modal-pop 0.42s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+}
+
+@keyframes modal-pop {
+  from { opacity: 0; transform: translateY(24px) scale(0.94); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.social-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(243, 239, 229, 0.65);
+  cursor: pointer;
+  transition: background 0.22s ease, color 0.22s ease;
+}
+
+.social-modal-close:hover {
+  background: rgba(255, 255, 255, 0.13);
+  color: #e9e2d3;
+}
+
+.social-modal-body {
+  margin-bottom: 24px;
+}
+
+.social-modal-hand {
+  display: block;
+  font-size: 2.8rem;
+  margin-bottom: 14px;
+}
+
+.social-modal-message {
+  margin: 0 auto;
+  max-width: 28ch;
+  color: rgba(243, 239, 229, 0.88);
+  font-size: 0.98rem;
+  font-weight: 500;
+  line-height: 1.55;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+}
+
+.social-modal-arrow {
+  display: block;
+  margin-top: 8px;
+  font-size: 1.5rem;
+  animation: arrow-bounce 1.3s ease-in-out infinite;
+}
+
+@keyframes arrow-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+.social-modal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 28px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #1877f2, #0d5dc7);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 4px 18px rgba(24, 119, 242, 0.35);
+}
+
+.social-modal-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(24, 119, 242, 0.48);
+}
+
+@media (max-width: 760px) {
+  .social-bubble {
+    right: 10px;
+    bottom: 58px;
+    width: 42px;
+    height: 42px;
+  }
+
+  .social-modal {
+    padding: 32px 22px 24px;
+  }
+
+  .social-modal-hand {
+    font-size: 2.2rem;
+  }
+
+  .social-modal-message {
+    font-size: 0.9rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .journey-scroll i::after {
     animation: none;

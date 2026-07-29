@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { SocialBubble } from "./SocialBubble";
 
 const scenes = [
   {
@@ -206,6 +207,7 @@ export function TeaJourney() {
           <div className="journey-meta">
             <span>Mountain tea · one harvest</span>
             <span>{ready ? "Scroll slowly" : "Preparing the journey…"}</span>
+            <SocialBubble />
           </div>
         </header>
 
