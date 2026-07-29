@@ -91,18 +91,41 @@ export function TeaJourney() {
           if (video && !disposed) {
             video.src = url;
             video.load();
-            // Wait until the video has enough data to be seekable before
-            // marking everything as ready. Otherwise the first scroll
-            // triggers currentTime jumps that silently fail on cold buffers.
+
+            // Force the browser to build the full keyframe index before the
+            // experience starts.  With blob URLs the entire file is already in
+            // memory, but browsers lazily parse — a plain `canplay` only
+            // guarantees the start is ready.  Scrubbing with currentTime needs
+            // every keyframe to be known.
             await new Promise<void>((resolve) => {
-              if (video.readyState >= video.HAVE_FUTURE_DATA) {
-                resolve();
-              } else {
-                const done = () => resolve();
-                video.addEventListener("canplay", done, { once: true });
+              const done = () => resolve();
+              let priming = true;
+
+              const prime = () => {
+                // Jump to near the end to force indexing, then back to start.
+                // This must happen AFTER the first canplay so the browser has
+                // parsed enough metadata to accept a seek.
+                if (!priming || disposed) return;
+                priming = false;
+
+                const onIndexed = () => {
+                  video.currentTime = 0;
+                  resolve();
+                };
+
+                video.addEventListener("seeked", onIndexed, { once: true });
                 video.addEventListener("error", done, { once: true });
-                // Safety timeout so one stuck video doesn't block the UI forever
-                setTimeout(done, 8000);
+                setTimeout(() => resolve(), 10000); // safety timeout
+
+                video.currentTime = video.duration * 0.99;
+              };
+
+              if (video.readyState >= video.HAVE_FUTURE_DATA) {
+                prime();
+              } else {
+                video.addEventListener("canplay", prime, { once: true });
+                video.addEventListener("error", done, { once: true });
+                setTimeout(done, 10000);
               }
             });
           }
